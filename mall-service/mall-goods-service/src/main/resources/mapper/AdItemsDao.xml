@@ -18,6 +18,11 @@
         where id = #{id}
     </select>
 
+    <select id="selectItemsByTypeId" resultMap="AdItemsMap" parameterType="Integer">
+        select * from ad_items
+        where type = #{type}
+    </select>
+
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="AdItemsMap">
         select

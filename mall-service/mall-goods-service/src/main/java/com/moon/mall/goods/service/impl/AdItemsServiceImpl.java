@@ -30,6 +30,16 @@ public class AdItemsServiceImpl implements AdItemsService {
         return this.adItemsDao.queryById(id);
     }
 
+
+    /***
+     * 通过类型查询数据
+     * @param type
+     * @return
+     */
+    public List<AdItems> selectItemsByTypeId(Integer type){
+        return adItemsDao.selectItemsByTypeId(type);
+    }
+
     /**
      * 查询多条数据
      *

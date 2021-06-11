@@ -1,16 +1,23 @@
 package com.moon.mall.goods.service;
 
-import com.moon.mall.goods.entity.AdItems;
+import com.moon.mall.goods.entity.Sku;
 
 import java.util.List;
 
 /**
- * (AdItems)表服务接口
+ * 商品表(Sku)表服务接口
  *
  * @author makejava
- * @since 2021-06-03 18:11:00
+ * @since 2021-06-11 16:23:26
  */
-public interface AdItemsService {
+public interface SkuService {
+
+    /**
+     * 通过商品分类Id查询对应的产品列表
+     * @param typeId
+     * @return
+     */
+    List<Sku> typeSkuItems(Integer typeId);
 
     /**
      * 通过ID查询单条数据
@@ -18,14 +25,7 @@ public interface AdItemsService {
      * @param id 主键
      * @return 实例对象
      */
-    AdItems queryById(Integer id);
-
-    /***
-     * 通过类型查询数据
-     * @param type
-     * @return
-     */
-    List<AdItems> selectItemsByTypeId(Integer type);
+    Sku queryById(String id);
 
     /**
      * 查询多条数据
@@ -34,23 +34,23 @@ public interface AdItemsService {
      * @param limit  查询条数
      * @return 对象列表
      */
-    List<AdItems> queryAllByLimit(int offset, int limit);
+    List<Sku> queryAllByLimit(int offset, int limit);
 
     /**
      * 新增数据
      *
-     * @param adItems 实例对象
+     * @param sku 实例对象
      * @return 实例对象
      */
-    AdItems insert(AdItems adItems);
+    Sku insert(Sku sku);
 
     /**
      * 修改数据
      *
-     * @param adItems 实例对象
+     * @param sku 实例对象
      * @return 实例对象
      */
-    AdItems update(AdItems adItems);
+    Sku update(Sku sku);
 
     /**
      * 通过主键删除数据
@@ -58,6 +58,6 @@ public interface AdItemsService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(Integer id);
+    boolean deleteById(String id);
 
 }
