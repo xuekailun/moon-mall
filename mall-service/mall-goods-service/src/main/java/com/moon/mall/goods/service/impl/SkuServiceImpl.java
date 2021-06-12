@@ -5,6 +5,9 @@ import com.moon.mall.goods.entity.Sku;
 import com.moon.mall.goods.dao.SkuDao;
 import com.moon.mall.goods.service.AdItemsService;
 import com.moon.mall.goods.service.SkuService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
  * @author makejava
  * @since 2021-06-11 16:23:26
  */
+@Slf4j
 @Service("skuService")
 public class SkuServiceImpl implements SkuService {
     @Resource
@@ -26,12 +30,21 @@ public class SkuServiceImpl implements SkuService {
     private AdItemsService adItemsService;
 
 
+
+    @Resource
+    private StringRedisTemplate template;
+
+
     /**
      * 通过商品分类Id查询对应的产品列表
+     * cacheNames = "ad-items-skus" : 命名空间
+     * key = "#typeId": 入参id作为缓存的key，使用的是SpEL表达式
      * @param typeId
      * @return
      */
+    @Cacheable(cacheNames = "ad-items-skus",key = "#typeId")
     public List<Sku> typeSkuItems(Integer typeId){
+        log.info("请求数据库查询");
         List<AdItems> adItems = adItemsService.selectItemsByTypeId(typeId);
 
         List<String> skdIds = adItems.stream().map(AdItems::getSkuId).collect(Collectors.toList());
