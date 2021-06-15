@@ -1,0 +1,15 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: mall-canal
+canal:
+  server: 127.0.0.1:11111
+  destination: example
+
+logging:
+  level:
+    org.springframework: INFO
+    com.moon.mall: DEBUG
+  file:
+    path: /home/log
