@@ -9,6 +9,7 @@ canal:
 
 logging:
   level:
+    top.javatool.canal: warn
     org.springframework: INFO
     com.moon.mall: DEBUG
   file:
