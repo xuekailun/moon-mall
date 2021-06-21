@@ -12,6 +12,9 @@ import java.util.Map;
 /**
  * @Auther Xue KaiLun
  * @Date 2021-06-17 16:53
+ *
+ * indexName 就是ES 索引库的索引名字
+ * type 就是当前对应对象的类型（理解成表的名字）
  */
 @Data
 @Document(indexName = "shopsearch",type = "skues")
