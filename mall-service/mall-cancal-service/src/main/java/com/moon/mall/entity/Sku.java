@@ -1,28 +1,30 @@
-package com.moon.mall.search.model;
+package com.moon.mall.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import lombok.NoArgsConstructor;
+import org.apache.ibatis.annotations.CacheNamespace;
+import top.javatool.canal.client.annotation.CanalTable;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 /**
- * @Auther Xue KaiLun
- * @Date 2021-06-17 16:53
+ * 商品表(Sku)实体类
  *
- * indexName 就是ES 索引库的索引名字
- * type 就是当前对应对象的类型（理解成表的名字）
+ * @author makejava
+ * @since 2021-06-11 16:23:26
  */
 @Data
-@Document(indexName = "shopsearch",type = "skues")
-public class SkuEs {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Sku implements Serializable {
+    private static final long serialVersionUID = -22917494196027678L;
     /**
      * 商品id
      */
-    @Id
     private String id;
     /**
      * SKU名称
@@ -55,24 +57,31 @@ public class SkuEs {
     /**
      * SPUID
      */
+    private String spu_id;
+
     private String spuId;
     /**
      * 类目ID
      */
+    private Integer category_id;
+
     private Integer categoryId;
     /**
      * 类目名称
      */
-    @Field(type = FieldType.Keyword) // keyword 代表不分词
+    private String category_name;
+
     private String categoryName;
     /**
      * 品牌id
      */
+    private Integer brand_id;
+
     private Integer brandId;
     /**
      * 品牌名称
      */
-    @Field(type = FieldType.Keyword)
+    private String brand_name;
     private String brandName;
     /**
      * 规格
@@ -83,6 +92,4 @@ public class SkuEs {
      */
     private Integer status;
 
-    // 属性映射
-    private Map<String,String> attrMap;
 }

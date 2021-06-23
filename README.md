@@ -13,3 +13,8 @@
     本模块目前采用的为application.yml
 ## Swagger
     localhost:xxxx/swagger-ui.html
+
+
+# 目前涉及到的内容
+    1. maven 父子级搭建
+    2. 集成 Mybatis、日志、Redis、RestTemplate、Swagger、Canal、ES、Spring Cache

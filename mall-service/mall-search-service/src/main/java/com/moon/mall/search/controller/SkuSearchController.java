@@ -6,6 +6,7 @@ import com.moon.mall.util.RespResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @Auther Xue KaiLun
@@ -29,6 +30,11 @@ public class SkuSearchController {
     public RespResult del(@PathVariable("id") String id){
         skuSearchService.del(id);
         return RespResult.ok();
+    }
+
+    @GetMapping
+    public RespResult search(@RequestParam Map<String,Object> searchMap){
+        return RespResult.ok(skuSearchService.search(searchMap));
     }
 
 }

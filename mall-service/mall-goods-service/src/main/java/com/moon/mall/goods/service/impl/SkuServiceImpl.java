@@ -29,8 +29,6 @@ public class SkuServiceImpl implements SkuService {
     @Resource
     private AdItemsService adItemsService;
 
-
-
     @Resource
     private StringRedisTemplate template;
 
