@@ -87,6 +87,8 @@ public class Sku implements Serializable {
      * 规格
      */
     private String skuAttribute;
+
+    private String sku_attribute;
     /**
      * 商品状态 1-正常，2-下架，3-删除
      */

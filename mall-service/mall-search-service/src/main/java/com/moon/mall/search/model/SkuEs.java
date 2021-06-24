@@ -17,7 +17,7 @@ import java.util.Map;
  * type 就是当前对应对象的类型（理解成表的名字）
  */
 @Data
-@Document(indexName = "shopsearch",type = "skues")
+@Document(indexName = "moonshopsearch",type = "skues")
 public class SkuEs {
     /**
      * 商品id
@@ -77,6 +77,7 @@ public class SkuEs {
     /**
      * 规格
      */
+    @Field(type = FieldType.Keyword)
     private String skuAttribute;
     /**
      * 商品状态 1-正常，2-下架，3-删除

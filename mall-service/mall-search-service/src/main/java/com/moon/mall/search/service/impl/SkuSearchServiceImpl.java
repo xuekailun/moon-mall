@@ -1,5 +1,8 @@
 package com.moon.mall.search.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.moon.mall.search.dao.SkuSearchDao;
 import com.moon.mall.search.model.SkuEs;
 import com.moon.mall.search.service.SkuSearchService;
@@ -15,13 +18,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Auther Xue KaiLun
@@ -55,6 +56,9 @@ public class SkuSearchServiceImpl implements SkuSearchService {
         // 分组数据
         Map<String,Object> groups = this.parseGroup(result.getAggregations());
 
+        // 属性信息合并
+        this.attrParse(groups);
+
         List<SkuEs> list = result.getContent();
 
         Map<String,Object> resultMap = new HashMap<>();
@@ -66,7 +70,38 @@ public class SkuSearchServiceImpl implements SkuSearchService {
     }
 
     /**
-     * 取出所有分组数据
+     * 将属性信息合并成Map对象
+     * {\"就业薪资\":\"10K起\",\"学习费用\":\"2万\"}
+     * @param searchMap
+     */
+    public void attrParse(Map<String,Object> searchMap){
+        // 先获取 attrmaps
+        List<String> attrMaps = (List<String>) searchMap.get("attrmaps");
+
+        if(!CollectionUtils.isEmpty(attrMaps)){
+            Map<String, Set<String>> allMaps = new HashMap<>();
+            // 循环集合
+            for(String attr : attrMaps){
+                Map<String,String> attrMap = JSON.parseObject(attr,Map.class);
+
+                for(Map.Entry<String,String> entry : attrMap.entrySet()){
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    Set<String> keys = new HashSet<>();
+
+                    keys.add(value);
+
+                    allMaps.put(key,keys);
+                }
+            }
+
+            //  获取每条记录，将记录转成Map
+            searchMap.put("attrmaps",allMaps);
+        }
+    }
+
+    /**
+     * 分组结果解析
      * @param aggregations
      * @return
      */
@@ -135,7 +170,7 @@ public class SkuSearchServiceImpl implements SkuSearchService {
         }
 
         if(StringUtils.isEmpty(searchMap.get("brand"))){
-            // 分类分组
+            // 品牌分组
             builder.addAggregation(AggregationBuilders
                     .terms("brandList") // 插叙的数据对应别名
                     .field("brandName") // 根据brandName分组
@@ -143,6 +178,12 @@ public class SkuSearchServiceImpl implements SkuSearchService {
             );
         }
 
+        // 属性分组查询
+        builder.addAggregation(AggregationBuilders
+                .terms("attrmaps") // 插叙的数据对应别名
+                .field("skuAttribute") // 根据skuAttribute分组
+                .size(100000) // 分组查询100000条
+        );
     }
 
     /**

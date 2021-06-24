@@ -34,3 +34,5 @@
 
     -- 刷新权限
     FLUSH PRIVILEGES;
+
+# AbstractCanalClient

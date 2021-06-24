@@ -1,5 +1,6 @@
 package com.moon.mall.listener;
 
+import com.alibaba.fastjson.JSONObject;
 import com.moon.mall.entity.Sku;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -54,10 +55,11 @@ public class SkuHandler implements EntryHandler<Sku> {
                 after.setCategoryId(after.getCategory_id());
                 after.setBrandName(after.getBrand_name());
                 after.setBrandId(after.getBrand_id());
+                after.setSkuAttribute(after.getSku_attribute());
                 restTemplate.postForEntity(path, after, String.class);
             }
 
-            log.info("update sku request >>> {}",path);
+            log.info("update sku request >>> {}；after:{}",path, JSONObject.toJSON(after));
 
         } catch (Exception e) {
             e.printStackTrace();
