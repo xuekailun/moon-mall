@@ -14,6 +14,9 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -128,11 +131,58 @@ public class SkuSearchServiceImpl implements SkuSearchService {
     }
 
     /**
-     * 搜索条件构建
+     * 搜索条件构建(多条件查询)
      * @param searchMap
      * @return
      */
     private NativeSearchQueryBuilder queryBuilder(Map<String,Object> searchMap){
+        // queryBuilder构建
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
+        // 多条件组合查询
+        BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+
+        if(null != searchMap){
+            // 关键字
+            Object keyWords = searchMap.get("keywords");
+            if(!StringUtils.isEmpty(keyWords)){
+                boolQuery.must(QueryBuilders.termQuery("name",keyWords.toString()));
+            }
+
+            // 分类
+            Object category = searchMap.get("category");
+            if(!StringUtils.isEmpty(category)){
+                boolQuery.must(QueryBuilders.termQuery("categoryName",category.toString()));
+            }
+
+            // 品牌
+            Object brand = searchMap.get("brand");
+            if(!StringUtils.isEmpty(brand)){
+                boolQuery.must(QueryBuilders.termQuery("brandName",category.toString()));
+            }
+
+            // 价格
+            Object price = searchMap.get("price");
+            if(!StringUtils.isEmpty(price)){
+                // 去掉元和以上，并按-分割
+                String[] prices = price.toString().replace("元","").replace("以上","").split("-");
+
+                // 范围查询
+                // price > x
+                boolQuery.must(QueryBuilders.rangeQuery("price").gt(Integer.valueOf(prices[0])));
+
+                // price <=y
+                boolQuery.must(QueryBuilders.rangeQuery("price").lte(Integer.valueOf(prices[1])));
+            }
+        }
+
+        // 新增排序
+        queryBuilder.withSort(SortBuilders.fieldSort("brand").order(SortOrder.ASC));
+
+        return queryBuilder.withQuery(boolQuery);
+    }
+    // 单条件查询
+    /*private NativeSearchQueryBuilder queryBuilder(Map<String,Object> searchMap){
         NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
 
         // 判断条件是否为空
@@ -141,17 +191,17 @@ public class SkuSearchServiceImpl implements SkuSearchService {
             Object keyWords = searchMap.get("keywords");
 
             if(!StringUtils.isEmpty(keyWords)){
-                /**
+                *//**
                  * matchQuery：会将搜索词分词，再与目标查询字段进行匹配，若分词中的任意一个词与目标字段匹配上，则可查询到。
                  * termQuery：不会对搜索词进行分词处理，而是作为一个整体与目标字段进行匹配，若完全匹配，则可查询到。
-                 */
+                 *//*
 //                builder.withQuery(QueryBuilders.termQuery("name",keyWords.toString()));
                 builder.withQuery(QueryBuilders.matchQuery("name",keyWords.toString()));
             }
         }
 
         return builder;
-    }
+    }*/
 
     /**
      * 分组查询
