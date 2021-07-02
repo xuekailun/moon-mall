@@ -79,6 +79,7 @@ public class SkuServiceImpl implements SkuService {
      * @param limit  查询条数
      * @return 对象列表
      */
+
     @Override
     public List<Sku> queryAllByLimit(int offset, int limit) {
         return this.skuDao.queryAllByLimit(offset, limit);
