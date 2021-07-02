@@ -5,10 +5,12 @@ import com.moon.mall.goods.entity.Sku;
 import com.moon.mall.goods.dao.SkuDao;
 import com.moon.mall.goods.service.AdItemsService;
 import com.moon.mall.goods.service.SkuService;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,6 +32,9 @@ public class SkuServiceImpl implements SkuService {
     private AdItemsService adItemsService;
 
     @Resource
+    private RestTemplate restTemplate;
+
+    @Resource
     private StringRedisTemplate template;
 
 
@@ -48,6 +53,22 @@ public class SkuServiceImpl implements SkuService {
         List<String> skdIds = adItems.stream().map(AdItems::getSkuId).collect(Collectors.toList());
 
         return this.selectSkuById(skdIds);
+    }
+
+
+    /**
+     * 商品数量分布式测试
+     */
+    @GlobalTransactional
+    public void demoDispersedSku(String id){
+        Sku sku = new Sku();
+        sku.setId(id);
+        sku.setNum(1);
+        log.info("修改商品表数据:{}",sku);
+        skuDao.update(sku);
+
+        String url = "http://127.0.0.1:8089/order/"+id;
+        restTemplate.getForEntity(url,String.class);
     }
 
 

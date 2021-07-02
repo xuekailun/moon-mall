@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @MapperScan(value = "com.moon.mall.goods.dao")
 // 开启缓存
-@EnableCaching
+//@EnableCaching
 public class MallGoodsApplication {
 
     public static void main(String[] args) {

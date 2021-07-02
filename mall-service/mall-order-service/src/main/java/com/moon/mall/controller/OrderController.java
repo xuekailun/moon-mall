@@ -2,6 +2,8 @@ package com.moon.mall.controller;
 
 import com.moon.mall.entity.Order;
 import com.moon.mall.service.OrderService;
+import com.moon.mall.service.OrderSkuService;
+import com.moon.mall.util.RespResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -20,6 +22,16 @@ public class OrderController {
      */
     @Resource
     private OrderService orderService;
+
+    @Resource
+    private OrderSkuService orderSkuService;
+
+
+    @GetMapping("/{id}")
+    public RespResult demo(@PathVariable String id){
+        orderSkuService.update(id);
+        return RespResult.ok();
+    }
 
     /**
      * 通过主键查询单条数据

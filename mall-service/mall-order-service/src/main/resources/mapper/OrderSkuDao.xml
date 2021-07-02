@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moon.mall.dao.OrderSkuDao">
+
+    <resultMap type="com.moon.mall.entity.OrderSku" id="OrderSkuMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="categoryOneId" column="category_one_id" jdbcType="INTEGER"/>
+        <result property="categoryTwoId" column="category_two_id" jdbcType="INTEGER"/>
+        <result property="categoryThreeId" column="category_three_id" jdbcType="INTEGER"/>
+        <result property="spuId" column="spu_id" jdbcType="VARCHAR"/>
+        <result property="skuId" column="sku_id" jdbcType="VARCHAR"/>
+        <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="price" column="price" jdbcType="INTEGER"/>
+        <result property="num" column="num" jdbcType="INTEGER"/>
+        <result property="money" column="money" jdbcType="INTEGER"/>
+        <result property="image" column="image" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="OrderSkuMap">
+        select
+          id, category_one_id, category_two_id, category_three_id, spu_id, sku_id, order_id, name, price, num, money, image
+        from shop_order.order_sku
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="OrderSkuMap">
+        select
+          id, category_one_id, category_two_id, category_three_id, spu_id, sku_id, order_id, name, price, num, money, image
+        from shop_order.order_sku
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="OrderSkuMap">
+        select
+        id, category_one_id, category_two_id, category_three_id, spu_id, sku_id, order_id, name, price, num, money,
+        image
+        from shop_order.order_sku
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="categoryOneId != null">
+                and category_one_id = #{categoryOneId}
+            </if>
+            <if test="categoryTwoId != null">
+                and category_two_id = #{categoryTwoId}
+            </if>
+            <if test="categoryThreeId != null">
+                and category_three_id = #{categoryThreeId}
+            </if>
+            <if test="spuId != null and spuId != ''">
+                and spu_id = #{spuId}
+            </if>
+            <if test="skuId != null and skuId != ''">
+                and sku_id = #{skuId}
+            </if>
+            <if test="orderId != null and orderId != ''">
+                and order_id = #{orderId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="num != null">
+                and num = #{num}
+            </if>
+            <if test="money != null">
+                and money = #{money}
+            </if>
+            <if test="image != null and image != ''">
+                and image = #{image}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into shop_order.order_sku(category_one_id, category_two_id, category_three_id, spu_id, sku_id, order_id, name, price, num, money, image)
+        values (#{categoryOneId}, #{categoryTwoId}, #{categoryThreeId}, #{spuId}, #{skuId}, #{orderId}, #{name}, #{price}, #{num}, #{money}, #{image})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into shop_order.order_sku(category_one_id, category_two_id, category_three_id, spu_id, sku_id, order_id,
+        name, price, num, money, image)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.categoryOneId}, #{entity.categoryTwoId}, #{entity.categoryThreeId}, #{entity.spuId},
+            #{entity.skuId}, #{entity.orderId}, #{entity.name}, #{entity.price}, #{entity.num}, #{entity.money},
+            #{entity.image})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into shop_order.order_sku(category_one_id, category_two_id, category_three_id, spu_id, sku_id, order_id,
+        name, price, num, money, image)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.categoryOneId}, #{entity.categoryTwoId}, #{entity.categoryThreeId}, #{entity.spuId},
+            #{entity.skuId}, #{entity.orderId}, #{entity.name}, #{entity.price}, #{entity.num}, #{entity.money},
+            #{entity.image})
+        </foreach>
+        on duplicate key update
+        category_one_id = values(category_one_id) , category_two_id = values(category_two_id) , category_three_id =
+        values(category_three_id) , spu_id = values(spu_id) , sku_id = values(sku_id) , order_id = values(order_id) ,
+        name = values(name) , price = values(price) , num = values(num) , money = values(money) , image = values(image)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update shop_order.order_sku
+        <set>
+            <if test="categoryOneId != null">
+                category_one_id = #{categoryOneId},
+            </if>
+            <if test="categoryTwoId != null">
+                category_two_id = #{categoryTwoId},
+            </if>
+            <if test="categoryThreeId != null">
+                category_three_id = #{categoryThreeId},
+            </if>
+            <if test="spuId != null and spuId != ''">
+                spu_id = #{spuId},
+            </if>
+            <if test="skuId != null and skuId != ''">
+                sku_id = #{skuId},
+            </if>
+            <if test="orderId != null and orderId != ''">
+                order_id = #{orderId},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="money != null">
+                money = #{money},
+            </if>
+            <if test="image != null and image != ''">
+                image = #{image},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from shop_order.order_sku where id = #{id}
+    </delete>
+
+</mapper>
+

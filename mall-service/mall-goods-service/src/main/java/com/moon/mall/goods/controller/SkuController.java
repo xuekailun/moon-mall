@@ -28,6 +28,19 @@ public class SkuController {
 
 
     /**
+     * 1319051488298889217
+     * @param id
+     * @return
+     */
+    @ApiOperation("分布式事务测试")
+    @ApiImplicitParam(name="id",value = "sku主键id",dataType = "string",required = true,example = "1319051488298889217")
+    @GetMapping("demo/{id}")
+    public RespResult demo(@PathVariable String id){
+        skuService.demoDispersedSku(id);
+        return RespResult.ok();
+    }
+
+    /**
      * 根据推广产品分类ID查询Sku列表
      * @param id
      * @return
