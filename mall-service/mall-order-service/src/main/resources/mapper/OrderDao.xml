@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moon.mall.dao.OrderDao">
+
+    <resultMap type="com.moon.mall.entity.Order" id="OrderMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="totalNum" column="total_num" jdbcType="INTEGER"/>
+        <result property="moneys" column="moneys" jdbcType="INTEGER"/>
+        <result property="payType" column="pay_type" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="payTime" column="pay_time" jdbcType="TIMESTAMP"/>
+        <result property="consignTime" column="consign_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="recipients" column="recipients" jdbcType="VARCHAR"/>
+        <result property="recipientsMobile" column="recipients_mobile" jdbcType="VARCHAR"/>
+        <result property="recipientsAddress" column="recipients_address" jdbcType="VARCHAR"/>
+        <result property="weixinTransactionId" column="weixin_transaction_id" jdbcType="VARCHAR"/>
+        <result property="orderStatus" column="order_status" jdbcType="INTEGER"/>
+        <result property="payStatus" column="pay_status" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="OrderMap">
+        select
+          id, total_num, moneys, pay_type, create_time, update_time, pay_time, consign_time, end_time, username, recipients, recipients_mobile, recipients_address, weixin_transaction_id, order_status, pay_status, is_delete
+        from shop_order.order
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="OrderMap">
+        select
+          id, total_num, moneys, pay_type, create_time, update_time, pay_time, consign_time, end_time, username, recipients, recipients_mobile, recipients_address, weixin_transaction_id, order_status, pay_status, is_delete
+        from shop_order.order
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="OrderMap">
+        select
+        id, total_num, moneys, pay_type, create_time, update_time, pay_time, consign_time, end_time, username,
+        recipients, recipients_mobile, recipients_address, weixin_transaction_id, order_status, pay_status, is_delete
+        from shop_order.order
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="totalNum != null">
+                and total_num = #{totalNum}
+            </if>
+            <if test="moneys != null">
+                and moneys = #{moneys}
+            </if>
+            <if test="payType != null and payType != ''">
+                and pay_type = #{payType}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="payTime != null">
+                and pay_time = #{payTime}
+            </if>
+            <if test="consignTime != null">
+                and consign_time = #{consignTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+            <if test="recipients != null and recipients != ''">
+                and recipients = #{recipients}
+            </if>
+            <if test="recipientsMobile != null and recipientsMobile != ''">
+                and recipients_mobile = #{recipientsMobile}
+            </if>
+            <if test="recipientsAddress != null and recipientsAddress != ''">
+                and recipients_address = #{recipientsAddress}
+            </if>
+            <if test="weixinTransactionId != null and weixinTransactionId != ''">
+                and weixin_transaction_id = #{weixinTransactionId}
+            </if>
+            <if test="orderStatus != null">
+                and order_status = #{orderStatus}
+            </if>
+            <if test="payStatus != null">
+                and pay_status = #{payStatus}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into shop_order.order(total_num, moneys, pay_type, create_time, update_time, pay_time, consign_time, end_time, username, recipients, recipients_mobile, recipients_address, weixin_transaction_id, order_status, pay_status, is_delete)
+        values (#{totalNum}, #{moneys}, #{payType}, #{createTime}, #{updateTime}, #{payTime}, #{consignTime}, #{endTime}, #{username}, #{recipients}, #{recipientsMobile}, #{recipientsAddress}, #{weixinTransactionId}, #{orderStatus}, #{payStatus}, #{isDelete})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into shop_order.order(total_num, moneys, pay_type, create_time, update_time, pay_time, consign_time,
+        end_time, username, recipients, recipients_mobile, recipients_address, weixin_transaction_id, order_status,
+        pay_status, is_delete)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.totalNum}, #{entity.moneys}, #{entity.payType}, #{entity.createTime}, #{entity.updateTime},
+            #{entity.payTime}, #{entity.consignTime}, #{entity.endTime}, #{entity.username}, #{entity.recipients},
+            #{entity.recipientsMobile}, #{entity.recipientsAddress}, #{entity.weixinTransactionId},
+            #{entity.orderStatus}, #{entity.payStatus}, #{entity.isDelete})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into shop_order.order(total_num, moneys, pay_type, create_time, update_time, pay_time, consign_time,
+        end_time, username, recipients, recipients_mobile, recipients_address, weixin_transaction_id, order_status,
+        pay_status, is_delete)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.totalNum}, #{entity.moneys}, #{entity.payType}, #{entity.createTime}, #{entity.updateTime},
+            #{entity.payTime}, #{entity.consignTime}, #{entity.endTime}, #{entity.username}, #{entity.recipients},
+            #{entity.recipientsMobile}, #{entity.recipientsAddress}, #{entity.weixinTransactionId},
+            #{entity.orderStatus}, #{entity.payStatus}, #{entity.isDelete})
+        </foreach>
+        on duplicate key update
+        total_num = values(total_num) , moneys = values(moneys) , pay_type = values(pay_type) , create_time =
+        values(create_time) , update_time = values(update_time) , pay_time = values(pay_time) , consign_time =
+        values(consign_time) , end_time = values(end_time) , username = values(username) , recipients =
+        values(recipients) , recipients_mobile = values(recipients_mobile) , recipients_address =
+        values(recipients_address) , weixin_transaction_id = values(weixin_transaction_id) , order_status =
+        values(order_status) , pay_status = values(pay_status) , is_delete = values(is_delete)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update shop_order.order
+        <set>
+            <if test="totalNum != null">
+                total_num = #{totalNum},
+            </if>
+            <if test="moneys != null">
+                moneys = #{moneys},
+            </if>
+            <if test="payType != null and payType != ''">
+                pay_type = #{payType},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime},
+            </if>
+            <if test="consignTime != null">
+                consign_time = #{consignTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="recipients != null and recipients != ''">
+                recipients = #{recipients},
+            </if>
+            <if test="recipientsMobile != null and recipientsMobile != ''">
+                recipients_mobile = #{recipientsMobile},
+            </if>
+            <if test="recipientsAddress != null and recipientsAddress != ''">
+                recipients_address = #{recipientsAddress},
+            </if>
+            <if test="weixinTransactionId != null and weixinTransactionId != ''">
+                weixin_transaction_id = #{weixinTransactionId},
+            </if>
+            <if test="orderStatus != null">
+                order_status = #{orderStatus},
+            </if>
+            <if test="payStatus != null">
+                pay_status = #{payStatus},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from shop_order.order where id = #{id}
+    </delete>
+
+</mapper>
+

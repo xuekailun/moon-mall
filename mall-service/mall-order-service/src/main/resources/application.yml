@@ -1,0 +1,27 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: mall-order
+  datasource:
+    url: jdbc:mysql://localhost:3306/shop_order?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  level:
+    org.springframework: INFO
+    com.moon.mall: DEBUG
+  file:
+    path: /home/log
+
+mybatis:
+  type-aliases-package: com.moon.mall.goods
+  mapper-locations: classpath:mapper/*Dao.xml
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

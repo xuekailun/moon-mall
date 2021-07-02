@@ -13,6 +13,8 @@
         <module>mall-goods-service</module>
         <module>mall-cancal-service</module>
         <module>mall-search-service</module>
+        <module>mall-order-service</module>
+        <module>mall-cart-service</module>
     </modules>
     <artifactId>mall-service</artifactId>
     <description>所有微服务工程的父工程</description>
