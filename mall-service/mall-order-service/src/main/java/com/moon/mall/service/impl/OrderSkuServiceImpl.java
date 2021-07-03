@@ -23,7 +23,7 @@ public class OrderSkuServiceImpl implements OrderSkuService {
     private OrderSkuDao orderSkuDao;
 
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void update(String id){
         OrderSku orderSku = new OrderSku();
         orderSku.setId(id);
@@ -32,7 +32,6 @@ public class OrderSkuServiceImpl implements OrderSkuService {
         orderSkuDao.update(orderSku);
 
         int i = 1/0;
-
     }
 
     /**

@@ -113,7 +113,7 @@
 
     <!--通过主键修改数据-->
     <update id="update">
-        update shop_order.order_sku
+        update order_sku
         <set>
             <if test="categoryOneId != null">
                 category_one_id = #{categoryOneId},

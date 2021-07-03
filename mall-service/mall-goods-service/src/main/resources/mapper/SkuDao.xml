@@ -134,7 +134,7 @@
 
     <!--通过主键修改数据-->
     <update id="update">
-        update shop_goods.sku
+        update sku
         <set>
             <if test="name != null and name != ''">
                 name = #{name},
